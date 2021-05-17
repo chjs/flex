@@ -1,0 +1,34 @@
+diff --git a/Makefile.am b/Makefile.am
+index 4f8904e..b8f837a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -23,7 +23,7 @@ endif
+ AM_YFLAGS = -d
+ #AM_LDFLAGS = 
+ if GCC_USED
+-AM_CFLAGS = -Wall -Wno-unknown-pragmas
++AM_CFLAGS = -Wall -Wno-unknown-pragmas -I../../../src
+ endif
+ 
+ DEFS = -D_REENTRANT -DYYDEBUG -DYY_NO_INPUT -DFILEBENCHDIR=\"$(datadir)/filebench\" -D_LARGEFILE64_SOURCE -D_GNU_SOURCE
+diff --git a/fb_localfs.c b/fb_localfs.c
+index 6fe131a..7f5a3c5 100644
+--- a/fb_localfs.c
++++ b/fb_localfs.c
+@@ -41,6 +41,7 @@
+ #include <sys/param.h>
+ #include <sys/resource.h>
+ #include <strings.h>
++#include <flex.h>
+ 
+ #include "filebench.h"
+ #include "fsplug.h"
+@@ -487,7 +488,7 @@ fb_lfsflow_aiowait(threadflow_t *threadflow, flowop_t *flowop)
+ static int
+ fb_lfs_open(fb_fdesc_t *fd, char *path, int flags, int perms)
+ {
+-	if ((fd->fd_num = open64(path, flags, perms)) < 0)
++	if ((fd->fd_num = open64(path, flags | O_FLEX, perms)) < 0)
+ 		return (FILEBENCH_ERROR);
+ 	else
+ 		return (FILEBENCH_OK);
