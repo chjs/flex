@@ -51,6 +51,10 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# etc.
+# flex
 tags
 *.swp
+benchmarks/filebench/filebench
+benchmarks/filebench/workloads
+benchmarks/filebench/src
+benchmarks/filebench/ltmain.sh
