@@ -54,7 +54,7 @@ static mmf_t *create_mmf(int fd, ULONG len, ULONG ino)
 		ERROR("malloc");
 
 	prot = PROT_READ | PROT_WRITE;
-	flags = MAP_SHARED | MAP_SYNC | MAP_POPULATE;
+	flags = MAP_SHARED | MAP_POPULATE;
 
 	if (len < DEFAULT_MMAP_SIZE) {
 		len = DEFAULT_MMAP_SIZE;
