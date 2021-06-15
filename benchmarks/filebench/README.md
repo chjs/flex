@@ -9,5 +9,11 @@ $ sudo apt install build-essential libtool m4 automake bison flex
 ## Build Filebench
 
 ```bash
-$ ./install
+$ ./install.sh
+```
+
+## Run Filebench
+
+```bash
+$ ./run.sh
 ```

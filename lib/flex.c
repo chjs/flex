@@ -52,6 +52,19 @@ int open64(const char *pathname, int flags, ...)
 	return posix.open64(pathname, flags, mode);
 }
 
+int open(const char *pathname, int flags, ...)
+{
+	int mode = 0;
+
+	if (flags & O_CREAT) {
+		va_list arg;
+		va_start(arg, flags);
+		mode = va_arg(arg, int);
+		va_end(arg);
+	}
+	return open64(pathname, flags, mode);
+}
+
 ssize_t read(int fd, void *buf, size_t len)
 {
 	if (check_flex(fd)) {
@@ -156,4 +169,28 @@ int close(int fd)
 		init_fops();
 
 	return posix.close(fd);
+}
+
+int unlink(const char *pathname)
+{
+	struct stat statbuf;
+	mmf_t *mmf;
+	int s;
+
+	s = stat(pathname, &statbuf);
+
+	if (s == 0) {
+		mmf = find_mmf(statbuf.st_ino);
+
+		if (mmf) {
+			PRINT("path=%s", pathname);
+			remove_mmf(mmf, pathname);
+		}
+
+	}
+
+	if (IS_ERR(posix.unlink == NULL))
+		init_fops();
+
+	return posix.unlink(pathname);
 }

@@ -10,6 +10,3 @@ automake --add-missing
 autoconf
 ./configure
 make
-cd ..
-ln -s src/filebench filebench
-cp -a src/workloads workloads

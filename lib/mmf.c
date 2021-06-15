@@ -216,7 +216,22 @@ ULONG write_mmf(int fd, mmf_t *mmf, ULONG pos, const void *buf, ULONG len)
 	return len;
 }
 
-void release_mmf(mmf_t *mmf, int fd)
+void release_mmf(mmf_t *mmf)
+{
+	int s;
+
+	s = pthread_mutex_lock(&mmf->mutex);
+	if (IS_ERR(s != 0))
+		ERROR("pthread_mutex_lock");
+
+	mmf->ref -= 1;
+
+	s = pthread_mutex_unlock(&mmf->mutex);
+	if (IS_ERR(s != 0))
+		ERROR("pthread_mutex_unlock");
+}
+
+void remove_mmf(mmf_t *mmf, const char *path)
 {
 	ULONG len = 0;
 	int s;
@@ -226,11 +241,10 @@ void release_mmf(mmf_t *mmf, int fd)
 		ERROR("pthread_mutex_lock");
 
 	if (mmf->ref > 1) {
-		mmf->ref -= 1;
-
 		s = pthread_mutex_unlock(&mmf->mutex);
 		if (IS_ERR(s != 0))
 			ERROR("pthread_mutex_unlock");
+		return;
 	}
 	list_del(&mmf->list);
 
@@ -241,12 +255,12 @@ void release_mmf(mmf_t *mmf, int fd)
 		ERROR("munmap");
 
 	if (mmf->filesize < len) {
-		if (IS_ERR(posix.ftruncate == NULL))
+		if (IS_ERR(posix.truncate == NULL))
 			init_fops();
 
-		s = posix.ftruncate(fd, mmf->filesize);
+		s = posix.truncate(path, mmf->filesize);
 		if (IS_ERR(s != 0))
-			ERROR("ftruncate");
+			ERROR("truncate");
 	}
 
 	free(mmf);

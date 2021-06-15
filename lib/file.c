@@ -150,7 +150,7 @@ int close_file(int fd)
 
 	file_array[fd] = NULL;
 
-	release_mmf(filp->mmf, fd);
+	release_mmf(filp->mmf);
 
 	free(filp);
 

@@ -10,6 +10,11 @@ fops_t posix;
 
 void init_fops(void)
 {
+	posix.open = dlsym(RTLD_NEXT, "open");
+	if (IS_ERR(posix.open == NULL)) {
+		ERROR("dlsym(open)");
+	}
+
 	posix.open64 = dlsym(RTLD_NEXT, "open64");
 	if (IS_ERR(posix.open64 == NULL)) {
 		ERROR("dlsym(open64)");
@@ -35,6 +40,10 @@ void init_fops(void)
 		ERROR("dlsym(ftruncate)");
 	}
 
+	posix.truncate = dlsym(RTLD_NEXT, "truncate");
+	if (IS_ERR(posix.truncate == NULL)) {
+		ERROR("dlsym(truncate)");
+	}
 
 	posix.__xstat64 = dlsym(RTLD_NEXT, "__xstat64");
 	if (IS_ERR(posix.__xstat64 == NULL)) {
@@ -54,5 +63,10 @@ void init_fops(void)
 	posix.close = dlsym(RTLD_NEXT, "close");
 	if (IS_ERR(posix.close == NULL)) {
 		ERROR("dlsym(close)");
+	}
+
+	posix.unlink = dlsym(RTLD_NEXT, "unlink");
+	if (IS_ERR(posix.unlink == NULL)) {
+		ERROR("dlsym(unlink)");
 	}
 }

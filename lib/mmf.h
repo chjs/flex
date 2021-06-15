@@ -22,7 +22,8 @@ mmf_t *find_mmf(ULONG ino);
 mmf_t *get_mmf(ULONG ino, int fd, ULONG size);
 ULONG read_mmf(mmf_t *mmf, ULONG pos, void *buf, ULONG len);
 ULONG write_mmf(int fd, mmf_t *mmf, ULONG pos, const void *buf, ULONG len);
-void release_mmf(mmf_t *mmf, int fd);
+void release_mmf(mmf_t *mmf);
+void remove_mmf(mmf_t *mmf, const char *path);
 
 #define MAX_MMFS 1024
 #define DEFAULT_MMAP_SIZE 1 << 20 // 1MB 
