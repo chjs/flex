@@ -62,7 +62,16 @@ int open(const char *pathname, int flags, ...)
 		mode = va_arg(arg, int);
 		va_end(arg);
 	}
-	return open64(pathname, flags, mode);
+
+	if (flags & O_FLEX) {
+		PRINT("path=%s, flags=%d, mode=%d", pathname, flags, mode);
+		return open_file(pathname, flags, mode);
+	}
+
+	if (IS_ERR(posix.open == NULL))
+		init_fops();
+
+	return posix.open(pathname, flags, mode);
 }
 
 ssize_t read(int fd, void *buf, size_t len)
