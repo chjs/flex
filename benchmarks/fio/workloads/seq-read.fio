@@ -1,0 +1,11 @@
+[testfile]
+name=fio-seq-read
+ioengine=sync
+directory=/mnt/pmem
+filesize=4G
+bs=4k
+rw=read
+thread
+numjobs=1
+runtime=10
+time_based
