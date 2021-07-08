@@ -54,7 +54,7 @@ static mmf_t *create_mmf(int fd, ULONG len, ULONG ino)
 		ERROR("malloc");
 
 	prot = PROT_READ | PROT_WRITE;
-	flags = MAP_SHARED | MAP_POPULATE;
+	flags = MAP_SHARED | MAP_POPULATE | MAP_SYNC;
 
 	if (len < DEFAULT_MMAP_SIZE) {
 		len = DEFAULT_MMAP_SIZE;
@@ -204,7 +204,7 @@ ULONG write_mmf(int fd, mmf_t *mmf, ULONG pos, const void *buf, ULONG len)
 		expand_mmf(mmf, pos, len, fd);
 
 	dst = mmf->start + pos;
-	NTSTORE(dst, buf, len);
+	memcpy2pmem(dst, buf, len);
 
 	if (pos + len > mmf->filesize)
 		mmf->filesize = pos + len;

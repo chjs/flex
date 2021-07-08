@@ -1,6 +1,7 @@
 #include "file.h"
 
 #include <sys/stat.h>
+#include <fcntl.h>
 
 #include "fops.h"
 #include "mmf.h"
@@ -32,7 +33,7 @@ int open_file(const char *pathname, int flags, int mode)
 	if (IS_ERR(posix.open64 == NULL))
 		init_fops();
 
-	fd = posix.open64(pathname, flags, mode);
+	fd = posix.open64(pathname, flags | O_RDWR, mode);
 	if (IS_ERR(fd < 0))
 		ERROR("posix.open64");
 
